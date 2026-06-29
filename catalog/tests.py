@@ -33,4 +33,8 @@ class PublicSiteApiTests(TestCase):
         self.assertEqual(payload["counts"]["officialBrands"], 1)
         self.assertEqual(payload["counts"]["officialShops"], 1)
         self.assertEqual(payload["heroImages"][0]["image"], "/assets/photo-01.png")
-        self.assertEqual(payload["catalog"][0]["texts"]["fr"]["flavors"], ["Rouge", "Vert"])
+        self.assertEqual(payload["catalog"], [])
+
+        products_response = self.client.get(reverse("catalog-products"))
+        self.assertEqual(products_response.status_code, 200)
+        self.assertEqual(products_response.json(), [])

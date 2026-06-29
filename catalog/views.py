@@ -56,11 +56,9 @@ class ProductListView(PublicQuerysetMixin, generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        return (
-            Product.objects.filter(is_active=True, brand__is_active=True)
-            .select_related("brand")
-            .order_by("sort_order", "name_fr")
-        )
+        # Temporary: catalogue sheets are displayed on the frontend until
+        # individual product visuals and information are ready.
+        return Product.objects.none()
 
 
 class PublicSiteView(PublicQuerysetMixin, APIView):
@@ -75,12 +73,6 @@ class PublicSiteView(PublicQuerysetMixin, APIView):
             .prefetch_related("images")
             .order_by("sort_order", "title_fr")
         )
-        products = (
-            Product.objects.filter(is_active=True, brand__is_active=True)
-            .select_related("brand")
-            .order_by("sort_order", "name_fr")
-        )
-
         context = {"request": request}
         return Response(
             {
@@ -99,6 +91,6 @@ class PublicSiteView(PublicQuerysetMixin, APIView):
                 "promotionPacks": PromotionPackSerializer(
                     promotion_packs, many=True, context=context
                 ).data,
-                "catalog": ProductSerializer(products, many=True, context=context).data,
+                "catalog": [],
             }
         )
