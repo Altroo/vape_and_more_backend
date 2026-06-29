@@ -258,7 +258,7 @@ class Command(BaseCommand):
                 "discount_label": "-15%",
                 "old_price": "464 DH",
                 "price": "399 DH",
-                "image_path": "/assets/promos/DUO PACK + DRINK.png",
+                "image_path": "/assets/promos/duo_pack_drink.png",
                 "sort_order": 3,
                 "texts": {
                     "fr": {
