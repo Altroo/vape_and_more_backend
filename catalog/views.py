@@ -13,10 +13,22 @@ from .serializers import (
     ShopSerializer,
 )
 
+PUBLIC_PRODUCT_CATALOG_ENABLED = False
+
 
 class PublicQuerysetMixin:
     permission_classes = (AllowAny,)
     authentication_classes = ()
+
+
+def get_public_products():
+    if not PUBLIC_PRODUCT_CATALOG_ENABLED:
+        return Product.objects.none()
+    return (
+        Product.objects.filter(is_active=True, brand__is_active=True)
+        .select_related("brand")
+        .order_by("sort_order", "name_fr")
+    )
 
 
 class HeroImageListView(PublicQuerysetMixin, generics.ListAPIView):
@@ -56,9 +68,7 @@ class ProductListView(PublicQuerysetMixin, generics.ListAPIView):
     pagination_class = None
 
     def get_queryset(self):
-        # Temporary: catalogue sheets are displayed on the frontend until
-        # individual product visuals and information are ready.
-        return Product.objects.none()
+        return get_public_products()
 
 
 class PublicSiteView(PublicQuerysetMixin, APIView):
@@ -73,6 +83,7 @@ class PublicSiteView(PublicQuerysetMixin, APIView):
             .prefetch_related("images")
             .order_by("sort_order", "title_fr")
         )
+        products = get_public_products()
         context = {"request": request}
         return Response(
             {
@@ -91,6 +102,6 @@ class PublicSiteView(PublicQuerysetMixin, APIView):
                 "promotionPacks": PromotionPackSerializer(
                     promotion_packs, many=True, context=context
                 ).data,
-                "catalog": [],
+                "catalog": ProductSerializer(products, many=True, context=context).data,
             }
         )
