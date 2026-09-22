@@ -33,7 +33,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         hero_images = [
-            ("hero-01", "/assets/photo-01.png", "Vape & More hero image 1", 1),
+            ("hero-01", "/assets/hero-rectif-022.png", "Vape & More hero image 1", 1),
             ("hero-02", "/assets/photo-02.png", "Vape & More hero image 2", 2),
             ("hero-03", "/assets/photo-03.png", "Vape & More hero image 3", 3),
         ]
@@ -139,6 +139,8 @@ class Command(BaseCommand):
                 )
             )
             Brand.objects.update_or_create(key=brand["key"], defaults=defaults)
+
+        Brand.objects.filter(key="nerd").update(is_active=False)
 
         Shop.objects.update_or_create(
             key="casablanca-bourgogne",
