@@ -62,7 +62,7 @@ class Command(BaseCommand):
                     },
                     "ar": {
                         "headline": "Crown Bar Al Fakher",
-                        "copy": "علامة فاخرة بهوية قوية، معروضة بوضوح ضمن قسم العلامات التجارية والتذييل.",
+                        "copy": "تعرّف على أجهزة Crown Bar من Al Fakher واختر النكهة التي تناسبك.",
                     },
                     "en": {
                         "headline": "Crown Bar Al Fakher",
@@ -87,7 +87,7 @@ class Command(BaseCommand):
                     },
                     "ar": {
                         "headline": "Adalya",
-                        "copy": "مجموعة معروفة بغنى النكهات وتنوعها وجودتها المنتظمة.",
+                        "copy": "نكهات متنوعة من Adalya، مع جودة ثابتة وخيارات تناسب مختلف الأذواق.",
                     },
                     "en": {
                         "headline": "Adalya",

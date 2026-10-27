@@ -1,7 +1,40 @@
+from importlib import import_module
+from types import SimpleNamespace
+
+from django.apps import apps
+from django.db import connection
 from django.test import TestCase
 from django.urls import reverse
 
 from .models import Brand, HeroImage, Product, Shop
+
+
+class ArabicBrandCopyTests(TestCase):
+    migration = import_module("catalog.migrations.0003_refine_arabic_brand_copy")
+
+    def test_seed_copy_is_refined_and_can_be_restored(self):
+        for key, previous, revised in self.migration.COPY_UPDATES:
+            brand = Brand.objects.create(
+                key=key, label=key, copy_ar=previous, copy_fr="Original"
+            )
+            self.migration.refine_arabic_copy(
+                apps, SimpleNamespace(connection=connection)
+            )
+            brand.refresh_from_db()
+            self.assertEqual(brand.copy_ar, revised)
+            self.assertEqual(brand.copy_fr, "Original")
+            self.migration.restore_arabic_copy(
+                apps, SimpleNamespace(connection=connection)
+            )
+            brand.refresh_from_db()
+            self.assertEqual(brand.copy_ar, previous)
+
+    def test_custom_arabic_copy_is_preserved(self):
+        for key, _, _ in self.migration.COPY_UPDATES:
+            Brand.objects.create(key=key, label=key, copy_ar="وصف مخصص للمتجر")
+        self.migration.refine_arabic_copy(apps, SimpleNamespace(connection=connection))
+        self.migration.restore_arabic_copy(apps, SimpleNamespace(connection=connection))
+        self.assertEqual(Brand.objects.filter(copy_ar="وصف مخصص للمتجر").count(), 2)
 
 
 class PublicSiteApiTests(TestCase):
