@@ -35,7 +35,7 @@ class Command(BaseCommand):
         hero_images = [
             ("hero-01", "/assets/hero-rectif-022.png", "Vape & More hero image 1", 1),
             ("hero-02", "/assets/photo-02.png", "Vape & More hero image 2", 2),
-            ("hero-03", "/assets/photo-03.png", "Vape & More hero image 3", 3),
+            ("hero-03", "/assets/hero-bg-02.png", "Vape & More hero image 3", 3),
         ]
         for key, image_path, alt, order in hero_images:
             HeroImage.objects.update_or_create(
